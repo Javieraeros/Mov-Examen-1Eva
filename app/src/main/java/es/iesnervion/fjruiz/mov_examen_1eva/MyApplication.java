@@ -5,7 +5,7 @@ import android.app.Application;
 import java.util.Vector;
 
 import es.iesnervion.fjruiz.mov_examen_1eva.model.Jugador;
-
+//ToDo Guardar en fichero,no en memoria
 public class MyApplication extends Application {
     Vector<Jugador> arrayJugadores=new Vector<>(10,0);
 

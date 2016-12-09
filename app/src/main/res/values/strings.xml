@@ -2,4 +2,6 @@
     <string name="app_name">Mov-Examen-1Eva</string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_detalles_jugador">DetallesJugador</string>
+    <string name="peso">Peso</string>
+    <string name="altura">Altura</string>
 </resources>

@@ -118,7 +118,11 @@ public class MainActivity extends AppCompatActivity
             onResume();
         }else{
             Intent editar=new Intent(this,DetallesJugador.class);
-            editar.putExtra("Jugador",jugadorSeleccionado);
+            editar.putExtra("jugador",jugadorSeleccionado);
+            //Añado la posición que hemos pulsado aquí,porque al utilizar vector.indexOf() no me detecta
+            //bien la posición
+            //No funciona porque tiene que ser parcelable... :(
+            //editar.putExtra("posicion",posicionPulsada);
             startActivityForResult(editar,0);
         }
         return true;

@@ -28,7 +28,7 @@ public class DetallesJugador extends AppCompatActivity
     private Bundle datos;
     private Jugador jugadorEditar,jugadorInsertar;
     private String nombreJugador, posicion;
-    private int pesoJugador,alturaJugador,imagenJugador;
+    private int pesoJugador,alturaJugador,imagenJugador,posicionEditar;
 
     //Aquí guardamos si lo que vamos a hacer es editar un jugador, o a añadir uno nuevo
     private boolean editar;
@@ -96,10 +96,11 @@ public class DetallesJugador extends AppCompatActivity
         //recogemos extra si hay
         if(getIntent().hasExtra("jugador")){
             datos = getIntent().getExtras();
-            /*
-            No se porqué pero no es el mismo objeto el que envía que el que recibe
-             */
+
             jugadorEditar =datos.getParcelable("jugador");
+            posicionEditar=vectorJugadores.indexOf(jugadorEditar);
+
+            //posicionEditar=datos.getParcelable("posicion");
             editar=true;
             //Le damos los valores.
 
@@ -125,6 +126,12 @@ public class DetallesJugador extends AppCompatActivity
                     break;
             }
             //ToDo Poner valores a spinners
+            //Pongo -150 porque setSelection me pide la posición, no el valor
+            spAltura.setSelection(jugadorEditar.getAltura()-150);
+
+            //Pongo -45 porque setSelection me pide la posición, no el valor
+            spPeso.setSelection(jugadorEditar.getPeso()-45);
+            
 
         }else{
             editar=false;
@@ -202,7 +209,7 @@ public class DetallesJugador extends AppCompatActivity
             jugadorInsertar=new Jugador(nombreJugador,imagenJugador,posicion,alturaJugador,pesoJugador);
             //Si es un jugador el que vamos a editar, lo que hacemos es sustituir el antiguo por el nuevo
             if(editar){
-                vectorJugadores.setElementAt(jugadorInsertar,vectorJugadores.indexOf(jugadorEditar));
+                vectorJugadores.setElementAt(jugadorInsertar,posicionEditar);
             }else{
                 vectorJugadores.add(jugadorInsertar);
             }

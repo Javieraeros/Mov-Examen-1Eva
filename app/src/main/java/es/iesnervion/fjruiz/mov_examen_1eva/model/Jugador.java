@@ -38,6 +38,7 @@ public class Jugador implements Parcelable {
     }
 
     protected Jugador(Parcel in) {
+        id=in.readInt();
         nombre = in.readString();
         imagen = in.readInt();
         posicion = in.readString();
@@ -91,6 +92,16 @@ public class Jugador implements Parcelable {
         //ToDo Modificar para que use cadenas de @string
         String devolver="Altura: "+this.altura+" Peso: "+this.peso+" Posicioń: "+this.posicion;
         return  devolver;
+    }
+
+    @Override
+    public boolean equals(Object o){
+        boolean resultado=false;
+        if(o instanceof Jugador){
+            Jugador j=(Jugador) o;
+            //ToDo hacer equasl que compare por id
+        }
+        return resultado;
     }
 
     private int asignaId() {
