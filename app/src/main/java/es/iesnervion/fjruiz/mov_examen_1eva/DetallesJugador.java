@@ -1,13 +1,11 @@
 package es.iesnervion.fjruiz.mov_examen_1eva;
 
 import android.content.Intent;
-import android.media.Image;
 import android.os.Bundle;
-import android.support.annotation.StringRes;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
@@ -15,14 +13,20 @@ import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import java.util.Vector;
 
 import es.iesnervion.fjruiz.mov_examen_1eva.controller.SpinnerArrayAdapter;
 import es.iesnervion.fjruiz.mov_examen_1eva.model.Jugador;
+import es.iesnervion.fjruiz.mov_examen_1eva.model.SeleccionaImagen;
 
 public class DetallesJugador extends AppCompatActivity
-        implements View.OnClickListener,AdapterView.OnItemSelectedListener{
+        implements View.OnClickListener,AdapterView.OnItemSelectedListener,
+        RadioGroup.OnCheckedChangeListener{
+    private static final int PICK_CONTACT_REQUEST =0 ;
+
+    //region Atributos
 
     //Si queremos editar un jugador, lo recogemos en el bundle
     private Bundle datos;
@@ -37,10 +41,11 @@ public class DetallesJugador extends AppCompatActivity
     private boolean imagenSeleccionada=false;
     private boolean alturaSeleccionada=false;
     private boolean pesoSeleccionado=false;
+    private boolean posicionSeleccionada=false;
 
     //Objetos del xml
     private EditText nombre;
-    private ImageView imagen;
+    private ImageView imagenView;
     private RadioGroup rg;
     private RadioButton rbBase,rbEscolta,rbAlero,rbAla,rbPivot;
     private Spinner spAltura,spPeso;
@@ -50,6 +55,13 @@ public class DetallesJugador extends AppCompatActivity
 
     private String[] arrayAltura=new String[101];
     private String[] arrayPeso=new String[206];
+
+    //Número de jugadores de cada posición
+    private int alero,ala,pivot,base,escolta;
+
+    private Toast toast;
+    //endregion
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,7 +73,17 @@ public class DetallesJugador extends AppCompatActivity
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(this);
 
+        //region Inicializaciones
+
+        /**
+         * Interesante saber que este vectorjugadores hace referencia al vectorJugadores original
+         * por lo que cualquier modificación en este vector, supone una modificación en el vector original
+         * y viceversa.
+         */
         vectorJugadores=((MyApplication) getApplication()).getVectorJugadores();
+
+        //Contamos las diferentes posiciones para deshabilitar dónde ya haya 2 jugadores
+        cuentaPosiciones();
 
         //Creamos los arrays de Altura y peso y los arrayadapter
         for(Integer i=150;i<=250;i++){
@@ -77,9 +99,10 @@ public class DetallesJugador extends AppCompatActivity
         //Asignamos lso objetos
         nombre=(EditText) findViewById(R.id.txtNombre);
 
-        imagen=(ImageView) findViewById(R.id.SeleccionaImagen);
+        imagenView=(ImageView) findViewById(R.id.SeleccionaImagen);
 
         rg=(RadioGroup) findViewById(R.id.rg);
+        rg.setOnCheckedChangeListener(this);
         rbBase=(RadioButton) findViewById(R.id.rbBase);
         rbEscolta=(RadioButton) findViewById(R.id.rbEscolta);
         rbAlero=(RadioButton) findViewById(R.id.rbAlero);
@@ -93,6 +116,9 @@ public class DetallesJugador extends AppCompatActivity
         spPeso.setAdapter(saaPeso);
         spPeso.setOnItemSelectedListener(this);
 
+        //endregion
+
+        //region EditarJugador
         //recogemos extra si hay
         if(getIntent().hasExtra("jugador")){
             datos = getIntent().getExtras();
@@ -100,14 +126,14 @@ public class DetallesJugador extends AppCompatActivity
             jugadorEditar =datos.getParcelable("jugador");
             posicionEditar=vectorJugadores.indexOf(jugadorEditar);
 
-            //posicionEditar=datos.getParcelable("posicion");
             editar=true;
             //Le damos los valores.
 
             nombre.setText(jugadorEditar.getNombre());
-            imagen.setImageResource(jugadorEditar.getImagen());
+            imagenView.setImageResource(jugadorEditar.getImagen());
             imagenSeleccionada=true;
 
+            posicionSeleccionada=true;
             switch (jugadorEditar.getPosicion()) {
                 case "Base":
                     rbBase.setChecked(true);
@@ -125,17 +151,71 @@ public class DetallesJugador extends AppCompatActivity
                     rbPivot.setChecked(true);
                     break;
             }
-            //ToDo Poner valores a spinners
+
             //Pongo -150 porque setSelection me pide la posición, no el valor
             spAltura.setSelection(jugadorEditar.getAltura()-150);
+            alturaSeleccionada=true;
 
             //Pongo -45 porque setSelection me pide la posición, no el valor
             spPeso.setSelection(jugadorEditar.getPeso()-45);
-            
+            pesoSeleccionado=true;
 
         }else{
             editar=false;
         }
+        habilitaPosiciones(editar);
+        //endregion
+    }
+
+
+    /**
+     * Método que maneja cuando clickemos en la imagen
+     * @param v
+     */
+    public void onClickImagen(View v){
+        //ToDo Hacer que elija la imagen lanzando un intent
+        //Recogiendo la imagen que seleecione el usuario del intent
+        imagenSeleccionada=true;
+        Intent seleccionaImagen=new Intent(this,SeleccionaImagen.class);
+        startActivityForResult(seleccionaImagen,PICK_CONTACT_REQUEST);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == PICK_CONTACT_REQUEST) {
+            if (resultCode == RESULT_OK) {
+                imagenJugador=data.getIntExtra("imagen",R.drawable.silueta);
+                imagenView.setImageResource(imagenJugador);
+            }
+        }
+    }
+
+    /**
+     * Método que controla cuando cambiamos la posición de un jugador.
+     * @param group
+     * @param checkedId
+     */
+
+    @Override
+    public void onCheckedChanged(RadioGroup group, int checkedId) {
+       switch (checkedId){
+            case R.id.rbAla:
+                posicion="Ala";
+                break;
+            case R.id.rbAlero:
+                posicion="Alero";
+                break;
+            case R.id.rbBase:
+                posicion="Base";
+                break;
+            case R.id.rbEscolta:
+                posicion="Escolta";
+                break;
+            case R.id.rbPivot:
+                posicion="Pivot";
+                break;
+        }
+        posicionSeleccionada=true;
     }
 
     @Override
@@ -165,19 +245,6 @@ public class DetallesJugador extends AppCompatActivity
         }
     }
 
-    /**
-     * Método que maneja cuando clickemos en la imagen
-     * @param v
-     */
-    public void onClickImagen(View v){
-        //ToDo Hacer que elija la imagen lanzando un intent
-        //Recogiendo la imagen que seleecione el usuario del intent
-        imagenSeleccionada=true;
-        /*Intent seleccionaImagen=new Intent(this,SeleccionaImagen.class);
-        startActivityForResult(seleccionaImagen,1);*/
-    }
-
-
 
     /**
      * Método que maneja el botón flotante
@@ -185,27 +252,9 @@ public class DetallesJugador extends AppCompatActivity
      */
     @Override
     public void onClick(View v) {
-        imagenSeleccionada=true;  //toDo borrar
         if(datosCorrectos()){
             nombreJugador=nombre.getText().toString();
 
-            switch (rg.getCheckedRadioButtonId()){
-                case R.id.rbAla:
-                    posicion="Ala";
-                    break;
-                case R.id.rbAlero:
-                    posicion="Alero";
-                    break;
-                case R.id.rbBase:
-                    posicion="Base";
-                    break;
-                case R.id.rbEscolta:
-                    posicion="Escolta";
-                    break;
-                case R.id.rbPivot:
-                    posicion="Pivot";
-                    break;
-            }
             jugadorInsertar=new Jugador(nombreJugador,imagenJugador,posicion,alturaJugador,pesoJugador);
             //Si es un jugador el que vamos a editar, lo que hacemos es sustituir el antiguo por el nuevo
             if(editar){
@@ -213,8 +262,11 @@ public class DetallesJugador extends AppCompatActivity
             }else{
                 vectorJugadores.add(jugadorInsertar);
             }
+        }else{
+            toast=Toast.makeText(getApplicationContext(),"Falta algún dato. Jugador no creado", Toast.LENGTH_SHORT);
+            toast.setGravity(Gravity.CENTER,0,0);
+            toast.show();
         }
-        ((MyApplication) getApplication()).setVectorJugadores(vectorJugadores);
         finish();
     }
 
@@ -224,9 +276,84 @@ public class DetallesJugador extends AppCompatActivity
      */
     private boolean datosCorrectos(){
         boolean resultado=false;
-        if(nombre.getText().toString()!="" && imagenSeleccionada && alturaSeleccionada && pesoSeleccionado){
+        if(!nombre.getText().toString().equals("") && posicionSeleccionada && imagenSeleccionada &&
+                alturaSeleccionada && pesoSeleccionado){
             resultado=true;
         }
         return resultado;
+    }
+
+    /**
+     * Cuenta cuantos jugadores hay de cada posición
+     */
+    private void cuentaPosiciones(){
+        //To malote XD
+        alero=ala=pivot=escolta=base=0;
+
+        for(int i=0;i<vectorJugadores.size();i++){
+            switch (vectorJugadores.get(i).getPosicion()){
+                case "Ala":
+                    ala++;
+                    break;
+                case "Alero":
+                    alero++;
+                    break;
+                case "Base":
+                    base++;
+                    break;
+                case "Escolta":
+                    escolta++;
+                    break;
+                case "Pivot":
+                    pivot++;
+                    break;
+            }
+        }
+
+    }
+
+    /**
+     * Método que se encarga de habilitar o deshabilitar los radiobutton de las posiciones
+     * @param editar, nos indica si estamos editando el jugador o creandolo
+     */
+    private void habilitaPosiciones(boolean editar){
+        if(ala>=2){
+            rbAla.setEnabled(false);
+        }
+        if(alero>=2){
+            rbAlero.setEnabled(false);
+        }
+        if(base>=2){
+            rbBase.setEnabled(false);
+        }
+        if(escolta>=2){
+            rbEscolta.setEnabled(false);
+        }
+        if(pivot>=2){
+            rbPivot.setEnabled(false);
+        }
+        /* Si estamos editando un jugador, no podemos deshabilitar la posición en la que juega
+        aunque ya hayan dos jugadores
+         */
+        if(editar){
+            switch (jugadorEditar.getPosicion()) {
+                case "Base":
+                    rbBase.setEnabled(true);
+                    break;
+                case "Escolta":
+                    rbEscolta.setEnabled(true);
+                    break;
+                case "Alero":
+                    rbAlero.setEnabled(true);
+                    break;
+                case "Ala":
+                    rbAla.setEnabled(true);
+                    break;
+                case "Pivot":
+                    rbPivot.setEnabled(true);
+                    break;
+            }
+        }
+
     }
 }

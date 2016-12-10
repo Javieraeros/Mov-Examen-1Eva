@@ -23,7 +23,7 @@ public class MainActivity extends AppCompatActivity
                     PopupMenu.OnMenuItemClickListener{
 
     private Vector<Jugador> arrayjugadores;
-
+    private FloatingActionButton fab;
     private ListView lv;
 
     //Aquí guardamos el item que hemos pulsado para borrar/editar
@@ -41,21 +41,21 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(this);
 
         Jugador jugador=new Jugador("Pene",R.drawable.jugador00,"Alero",90,150);
-        Jugador jugador2=new Jugador("Peneeeee",R.drawable.jugador00,"Alero",90,150);
+        Jugador jugador2=new Jugador("Jugador10",R.drawable.jugador00,"Alero",90,150);
+        ((MyApplication) getApplication()).setJugador(jugador);
+        ((MyApplication) getApplication()).setJugador(jugador);
+        ((MyApplication) getApplication()).setJugador(jugador);
+        ((MyApplication) getApplication()).setJugador(jugador);
+        ((MyApplication) getApplication()).setJugador(jugador);
+        ((MyApplication) getApplication()).setJugador(jugador);
+        ((MyApplication) getApplication()).setJugador(jugador);
         ((MyApplication) getApplication()).setJugador(jugador);
         ((MyApplication) getApplication()).setJugador(jugador);
         ((MyApplication) getApplication()).setJugador(jugador2);
-        ((MyApplication) getApplication()).setJugador(jugador);
-        ((MyApplication) getApplication()).setJugador(jugador);
-        ((MyApplication) getApplication()).setJugador(jugador);
-        ((MyApplication) getApplication()).setJugador(jugador);
-        ((MyApplication) getApplication()).setJugador(jugador);
-        ((MyApplication) getApplication()).setJugador(jugador);
-        ((MyApplication) getApplication()).setJugador(jugador);
         arrayjugadores=((MyApplication) getApplication()).getVectorJugadores();
 
     }
@@ -67,9 +67,19 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onResume(){
         super.onResume();
+        arrayjugadores=((MyApplication) getApplication()).getVectorJugadores();
         JugadorArrayAdapter jaa=new JugadorArrayAdapter(this,R.layout.fila,R.id.texto,arrayjugadores.toArray());
         lv.setAdapter(jaa);
         lv.setOnItemClickListener(this);
+        //Aunque lo tenemos controlado para que no se puedan insertar más de 10 jugadores
+        //Es mejor no darle la opción al usuario de que pueda insertarlo
+        if(arrayjugadores.size()>=10){
+            fab.setEnabled(false);
+            fab.setVisibility(View.INVISIBLE);
+        }else{
+            fab.setEnabled(true);
+            fab.setVisibility(View.VISIBLE);
+        }
     }
 
     /**
@@ -129,9 +139,7 @@ public class MainActivity extends AppCompatActivity
     }
 
 
-    /**AutoGenerado pro Android Studio
-     *
-     */
+    //region AutoGenerado por Android Studio
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -155,4 +163,5 @@ public class MainActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
+    //endregion
 }

@@ -46,6 +46,7 @@ public class Jugador implements Parcelable {
         peso = in.readInt();
     }
 
+    public int getId(){return id;}
 
     public String getNombre() {
         return nombre;
@@ -90,7 +91,7 @@ public class Jugador implements Parcelable {
     @Override
     public String toString(){
         //ToDo Modificar para que use cadenas de @string
-        String devolver="Altura: "+this.altura+" Peso: "+this.peso+" Posicioń: "+this.posicion;
+        String devolver="Altura: "+this.altura+" Peso: "+this.peso+" Posición: "+this.posicion;
         return  devolver;
     }
 
@@ -99,7 +100,8 @@ public class Jugador implements Parcelable {
         boolean resultado=false;
         if(o instanceof Jugador){
             Jugador j=(Jugador) o;
-            //ToDo hacer equasl que compare por id
+            resultado= (j.getId()==this.id);
+
         }
         return resultado;
     }

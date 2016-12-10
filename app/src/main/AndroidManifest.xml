@@ -22,7 +22,8 @@
         <activity
             android:name=".DetallesJugador"
             android:label="@string/title_activity_detalles_jugador"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".model.SeleccionaImagen"></activity>
     </application>
 
 </manifest>

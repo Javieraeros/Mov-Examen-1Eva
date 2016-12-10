@@ -7,31 +7,33 @@ import java.util.Vector;
 import es.iesnervion.fjruiz.mov_examen_1eva.model.Jugador;
 //ToDo Guardar en fichero,no en memoria
 public class MyApplication extends Application {
-    Vector<Jugador> arrayJugadores=new Vector<>(10,0);
+    Vector<Jugador> vectorJugadores;
 
     public MyApplication(){
-
+        vectorJugadores=new Vector<>(10,0);
     }
 
     public MyApplication(Vector<Jugador> arrayJugadores) {
-        this.arrayJugadores = arrayJugadores;
+        this.vectorJugadores = arrayJugadores;
     }
 
     public Vector<Jugador> getVectorJugadores() {
-        return arrayJugadores;
+        return vectorJugadores;
     }
 
     public void setVectorJugadores(Vector<Jugador> arrayJugadores) {
-        this.arrayJugadores = arrayJugadores;
+        if(arrayJugadores.size()<11){
+            this.vectorJugadores = arrayJugadores;
+        }
     }
 
     public Jugador getJugador(int posicion){
-        return arrayJugadores.elementAt(posicion);
+        return vectorJugadores.elementAt(posicion);
     }
 
     public void setJugador(Jugador jugador){
-        if(arrayJugadores.size()<11){
-            arrayJugadores.add(jugador);
+        if(this.vectorJugadores.size()<10){
+            vectorJugadores.add(jugador);
         }
     }
 
@@ -41,10 +43,10 @@ public class MyApplication extends Application {
      * @param posicion
      */
     public void sobreEscribeJugador(Jugador j,int posicion){
-        arrayJugadores.setElementAt(j,posicion);
+        vectorJugadores.setElementAt(j,posicion);
     }
 
     public void eliminaJugador(int posicion){
-        arrayJugadores.remove(posicion);
+        vectorJugadores.remove(posicion);
     }
 }

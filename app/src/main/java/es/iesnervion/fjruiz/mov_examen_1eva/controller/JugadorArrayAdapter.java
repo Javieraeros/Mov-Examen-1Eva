@@ -10,9 +10,6 @@ import android.widget.ArrayAdapter;
 import es.iesnervion.fjruiz.mov_examen_1eva.R;
 import es.iesnervion.fjruiz.mov_examen_1eva.model.Jugador;
 
-/**
- * Documentación TODO
- */
 
 public class JugadorArrayAdapter extends ArrayAdapter {
 
