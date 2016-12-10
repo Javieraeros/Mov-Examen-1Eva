@@ -19,7 +19,7 @@ import es.iesnervion.fjruiz.mov_examen_1eva.controller.JugadorArrayAdapter;
 import es.iesnervion.fjruiz.mov_examen_1eva.model.Jugador;
 
 public class MainActivity extends AppCompatActivity
-        implements View.OnClickListener, AdapterView.OnItemClickListener,
+        implements View.OnClickListener, AdapterView.OnItemLongClickListener,
                     PopupMenu.OnMenuItemClickListener{
 
     private Vector<Jugador> arrayjugadores;
@@ -70,7 +70,8 @@ public class MainActivity extends AppCompatActivity
         arrayjugadores=((MyApplication) getApplication()).getVectorJugadores();
         JugadorArrayAdapter jaa=new JugadorArrayAdapter(this,R.layout.fila,R.id.texto,arrayjugadores.toArray());
         lv.setAdapter(jaa);
-        lv.setOnItemClickListener(this);
+        //lv.setOnItemClickListener(this);
+        lv.setOnItemLongClickListener(this);
         //Aunque lo tenemos controlado para que no se puedan insertar más de 10 jugadores
         //Es mejor no darle la opción al usuario de que pueda insertarlo
         if(arrayjugadores.size()>=10){
@@ -100,7 +101,7 @@ public class MainActivity extends AppCompatActivity
      * @param id
      */
     @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+    public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
         //recuperamos la posición y el jugador pulsado
         posicionPulsada=position;
         jugadorSeleccionado=arrayjugadores.elementAt(position);
@@ -110,9 +111,9 @@ public class MainActivity extends AppCompatActivity
         popupMenu.getMenuInflater().inflate(R.menu.menu, popupMenu.getMenu());
         popupMenu.setOnMenuItemClickListener(this);
         popupMenu.show();
+        return true;
     }
-
-
+    
     /**
      * Selección de una posibilidad del menú
      * @param item
@@ -162,6 +163,7 @@ public class MainActivity extends AppCompatActivity
 
         return super.onOptionsItemSelected(item);
     }
+
 
     //endregion
 }

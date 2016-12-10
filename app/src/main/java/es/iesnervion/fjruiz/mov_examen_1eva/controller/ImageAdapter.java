@@ -33,7 +33,7 @@ public class ImageAdapter extends BaseAdapter {
             }
         }
         //Recuperamos las imagenes que no vamos a mostrar porque ya las tenemos cogidas
-        vectorJugadores=((MyApplication) c.getApplicationContext()).getVectorJugadores();
+        vectorJugadores=((MyApplication) c.getApplicationContext()).getVectorJugadores(); //Necesitamos recuperar el contexto!
         for(int j=0;j<vectorJugadores.size();j++){
             imagenesEliminar.add(vectorJugadores.elementAt(j).getImagen());
         }
@@ -65,7 +65,7 @@ public class ImageAdapter extends BaseAdapter {
             imageView = new ImageView(mContext);
             imageView.setLayoutParams(new GridView.LayoutParams(150, 150));
             imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-            imageView.setPadding(8, 8, 8, 8);
+            imageView.setPadding(1, 1, 1, 1);
         } else {
             imageView = (ImageView) convertView;
         }
