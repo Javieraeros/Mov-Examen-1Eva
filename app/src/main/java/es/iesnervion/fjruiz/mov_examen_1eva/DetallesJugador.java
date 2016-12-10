@@ -132,7 +132,7 @@ public class DetallesJugador extends AppCompatActivity
             nombre.setText(jugadorEditar.getNombre());
             imagenView.setImageResource(jugadorEditar.getImagen());
             imagenSeleccionada=true;
-
+            imagenJugador=jugadorEditar.getImagen();
             posicionSeleccionada=true;
             switch (jugadorEditar.getPosicion()) {
                 case "Base":
@@ -173,9 +173,6 @@ public class DetallesJugador extends AppCompatActivity
      * @param v
      */
     public void onClickImagen(View v){
-        //ToDo Hacer que elija la imagen lanzando un intent
-        //Recogiendo la imagen que seleecione el usuario del intent
-        imagenSeleccionada=true;
         Intent seleccionaImagen=new Intent(this,SeleccionaImagen.class);
         startActivityForResult(seleccionaImagen,PICK_CONTACT_REQUEST);
     }
@@ -184,6 +181,7 @@ public class DetallesJugador extends AppCompatActivity
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == PICK_CONTACT_REQUEST) {
             if (resultCode == RESULT_OK) {
+                imagenSeleccionada=true;
                 imagenJugador=data.getIntExtra("imagen",R.drawable.silueta);
                 imagenView.setImageResource(imagenJugador);
             }

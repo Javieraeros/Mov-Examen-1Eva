@@ -106,14 +106,13 @@ public class MainActivity extends AppCompatActivity
         posicionPulsada=position;
         jugadorSeleccionado=arrayjugadores.elementAt(position);
 
-
         PopupMenu popupMenu = new PopupMenu(this, view);
         popupMenu.getMenuInflater().inflate(R.menu.menu, popupMenu.getMenu());
         popupMenu.setOnMenuItemClickListener(this);
         popupMenu.show();
         return true;
     }
-    
+
     /**
      * Selección de una posibilidad del menú
      * @param item
@@ -134,7 +133,7 @@ public class MainActivity extends AppCompatActivity
             //bien la posición
             //No funciona porque tiene que ser parcelable... :(
             //editar.putExtra("posicion",posicionPulsada);
-            startActivityForResult(editar,0);
+            startActivity(editar);
         }
         return true;
     }

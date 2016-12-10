@@ -9,40 +9,14 @@ import android.widget.ImageView;
 
 import java.util.Vector;
 
-import es.iesnervion.fjruiz.mov_examen_1eva.MyApplication;import android.app.Application;
-import es.iesnervion.fjruiz.mov_examen_1eva.model.Jugador;
-
-
 public class ImageAdapter extends BaseAdapter {
     private Context mContext;
-    //Aquí guardaremos TODAS las imagenes
-    private Vector<Integer> imagenesOriginal = new Vector<>(25, 0);
-    //Aquí solo guardaremos las imagenes que vamos a mostrar.
-    private Vector<Integer> imagenesMostrar = new Vector<>(25, 0);
-    private Vector<Integer> imagenesEliminar = new Vector<>(25, 0);
+    private Vector<Integer> imagenesMostrar;
 
-    private Vector<Jugador> vectorJugadores=new Vector<>(10,0);
-    public ImageAdapter(Context c) {
+    public ImageAdapter(Context c,Vector<Integer> vector) {
         mContext = c;
-        //Recuperamos todas las imagenes
-        for (int i = 0; i < 25; i++) {
-            if (i < 10) {
-                imagenesOriginal.add(c.getResources().getIdentifier("jugador0" + i, "drawable", c.getPackageName()));
-            } else {
-                imagenesOriginal.add(c.getResources().getIdentifier("jugador" + i, "drawable", c.getPackageName()));
-            }
-        }
-        //Recuperamos las imagenes que no vamos a mostrar porque ya las tenemos cogidas
-        vectorJugadores=((MyApplication) c.getApplicationContext()).getVectorJugadores(); //Necesitamos recuperar el contexto!
-        for(int j=0;j<vectorJugadores.size();j++){
-            imagenesEliminar.add(vectorJugadores.elementAt(j).getImagen());
-        }
+        imagenesMostrar=vector;
 
-        //Por último, quitamos de las imagenes a mostrar, las que no queremos mostrar
-        imagenesMostrar=imagenesOriginal;
-        for(int k=0;k<imagenesEliminar.size();k++){
-            imagenesMostrar.remove(imagenesEliminar.elementAt(k));
-        }
     }
 
     public int getCount() {
@@ -57,11 +31,9 @@ public class ImageAdapter extends BaseAdapter {
         return 0;
     }
 
-    // create a new ImageView for each item referenced by the Adapter
     public View getView(int position, View convertView, ViewGroup parent) {
         ImageView imageView;
         if (convertView == null) {
-            // if it's not recycled, initialize some attributes
             imageView = new ImageView(mContext);
             imageView.setLayoutParams(new GridView.LayoutParams(150, 150));
             imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
