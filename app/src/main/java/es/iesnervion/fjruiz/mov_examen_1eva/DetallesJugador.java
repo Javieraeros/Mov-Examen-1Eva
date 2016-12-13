@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import java.util.Vector;
 
+import es.iesnervion.fjruiz.mov_examen_1eva.controller.FicheroController;
 import es.iesnervion.fjruiz.mov_examen_1eva.controller.SpinnerArrayAdapter;
 import es.iesnervion.fjruiz.mov_examen_1eva.model.Jugador;
 import es.iesnervion.fjruiz.mov_examen_1eva.model.SeleccionaImagen;
@@ -51,6 +52,7 @@ public class DetallesJugador extends AppCompatActivity
     private Spinner spAltura,spPeso;
 
     //Array compartido
+    private FicheroController miFichero;
     private Vector<Jugador> vectorJugadores;
 
     private String[] arrayAltura=new String[101];
@@ -80,7 +82,8 @@ public class DetallesJugador extends AppCompatActivity
          * por lo que cualquier modificación en este vector, supone una modificación en el vector original
          * y viceversa.
          */
-        vectorJugadores=((MyApplication) getApplication()).getVectorJugadores();
+        miFichero=new FicheroController(this);
+        vectorJugadores=miFichero.recuperaJugadores();
 
         //Contamos las diferentes posiciones para deshabilitar dónde ya haya 2 jugadores
         cuentaPosiciones();
@@ -123,7 +126,7 @@ public class DetallesJugador extends AppCompatActivity
         if(getIntent().hasExtra("jugador")){
             datos = getIntent().getExtras();
 
-            jugadorEditar =datos.getParcelable("jugador");
+            jugadorEditar =(Jugador) datos.getSerializable("jugador");
             posicionEditar=vectorJugadores.indexOf(jugadorEditar);
 
             editar=true;
@@ -260,6 +263,7 @@ public class DetallesJugador extends AppCompatActivity
             }else{
                 vectorJugadores.add(jugadorInsertar);
             }
+            miFichero.escribeJugadores(vectorJugadores);
         }else{
             toast=Toast.makeText(getApplicationContext(),"Falta algún dato. Jugador no creado", Toast.LENGTH_SHORT);
             toast.setGravity(Gravity.CENTER,0,0);

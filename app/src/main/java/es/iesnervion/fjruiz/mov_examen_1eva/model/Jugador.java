@@ -5,9 +5,11 @@ import android.graphics.Region;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.io.Serializable;
+
 import es.iesnervion.fjruiz.mov_examen_1eva.R;
 
-public class Jugador implements Parcelable {
+public class Jugador implements Serializable {
 
     //ToDo cambiar este método por uno que recupere el id de un archivo o BBDD
     private static int idStatico=0;
@@ -111,7 +113,7 @@ public class Jugador implements Parcelable {
         return idStatico;
     }
 
-    @Override
+    /*@Override
     public int describeContents() {
         return 0;
     }
@@ -137,5 +139,5 @@ public class Jugador implements Parcelable {
         public Jugador[] newArray(int size) {
             return new Jugador[size];
         }
-    };
+    };*/
 }

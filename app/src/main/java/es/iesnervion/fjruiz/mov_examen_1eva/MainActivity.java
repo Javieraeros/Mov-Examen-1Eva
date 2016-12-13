@@ -15,6 +15,7 @@ import android.widget.ListView;
 
 import java.util.Vector;
 
+import es.iesnervion.fjruiz.mov_examen_1eva.controller.FicheroController;
 import es.iesnervion.fjruiz.mov_examen_1eva.controller.JugadorArrayAdapter;
 import es.iesnervion.fjruiz.mov_examen_1eva.model.Jugador;
 
@@ -22,6 +23,7 @@ public class MainActivity extends AppCompatActivity
         implements View.OnClickListener, AdapterView.OnItemLongClickListener,
                     PopupMenu.OnMenuItemClickListener{
 
+    private FicheroController miFichero;
     private Vector<Jugador> arrayjugadores;
     private FloatingActionButton fab;
     private ListView lv;
@@ -44,7 +46,7 @@ public class MainActivity extends AppCompatActivity
         fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(this);
 
-        Jugador jugador=new Jugador("Pene",R.drawable.jugador00,"Alero",90,150);
+        /*Jugador jugador=new Jugador("Pene",R.drawable.jugador00,"Alero",90,150);
         Jugador jugador2=new Jugador("Jugador10",R.drawable.jugador00,"Alero",90,150);
         ((MyApplication) getApplication()).setJugador(jugador);
         ((MyApplication) getApplication()).setJugador(jugador);
@@ -55,8 +57,9 @@ public class MainActivity extends AppCompatActivity
         ((MyApplication) getApplication()).setJugador(jugador);
         ((MyApplication) getApplication()).setJugador(jugador);
         ((MyApplication) getApplication()).setJugador(jugador);
-        ((MyApplication) getApplication()).setJugador(jugador2);
-        arrayjugadores=((MyApplication) getApplication()).getVectorJugadores();
+        ((MyApplication) getApplication()).setJugador(jugador2);*/
+        miFichero=new FicheroController(this);
+        arrayjugadores=miFichero.recuperaJugadores();
 
     }
 
@@ -67,7 +70,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onResume(){
         super.onResume();
-        arrayjugadores=((MyApplication) getApplication()).getVectorJugadores();
+        arrayjugadores=miFichero.recuperaJugadores();
         JugadorArrayAdapter jaa=new JugadorArrayAdapter(this,R.layout.fila,R.id.texto,arrayjugadores.toArray());
         lv.setAdapter(jaa);
         //lv.setOnItemClickListener(this);
@@ -122,7 +125,7 @@ public class MainActivity extends AppCompatActivity
     public boolean onMenuItemClick(MenuItem item) {
         if(item.getItemId()==R.id.borrar){
 
-            ((MyApplication) getApplication()).eliminaJugador(posicionPulsada);
+            arrayjugadores.remove(posicionPulsada);
 
             //Llamo a onResume para que recargue el array de jugadores
             onResume();
@@ -138,6 +141,11 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
+    @Override
+    public void onDestroy(){
+        super.onDestroy();
+        miFichero.escribeJugadores(arrayjugadores);
+    }
 
     //region AutoGenerado por Android Studio
 
