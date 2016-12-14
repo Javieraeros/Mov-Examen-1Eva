@@ -18,7 +18,6 @@ import java.io.ObjectOutputStream;
 import java.util.Vector;
 
 import es.iesnervion.fjruiz.mov_examen_1eva.model.Jugador;
-import es.iesnervion.fjruiz.mov_examen_1eva.model.MiOOS;
 
 //ToDo Documentar e intentar usar singleton
 public class FicheroController {
