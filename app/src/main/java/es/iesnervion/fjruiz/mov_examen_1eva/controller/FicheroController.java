@@ -20,7 +20,7 @@ import java.util.Vector;
 import es.iesnervion.fjruiz.mov_examen_1eva.model.Jugador;
 import es.iesnervion.fjruiz.mov_examen_1eva.model.MiOOS;
 
-//ToDo Documentar
+//ToDo Documentar e intentar quitar id statico
 public class FicheroController {
     //region Atributos
 
