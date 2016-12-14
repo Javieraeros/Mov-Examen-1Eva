@@ -6,6 +6,8 @@ import android.util.Log;
 import android.view.Gravity;
 import android.widget.Toast;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.EOFException;
 import java.io.File;
 import java.io.FileInputStream;
@@ -21,9 +23,9 @@ import es.iesnervion.fjruiz.mov_examen_1eva.model.MiOOS;
 public class FicheroController {
     //region Atributos
 
-    private File carpeta;
+    private File ficheroId;
     private File fichero;
-    private Context c;
+    private static Context c;
 
     //endregion
 
@@ -37,6 +39,11 @@ public class FicheroController {
         fichero=new File(c.getFilesDir(),"fichero.dat");
     }
 
+    public FicheroController(String cadena){
+        ficheroId=new File(c.getFilesDir(),cadena);
+    }
+
+    //endregion
     /**
      * Método que devuelve todos los jugadores de un fichero
      * @return
@@ -61,9 +68,9 @@ public class FicheroController {
             toast.show();
         }catch(EOFException e){
             //ToDo cambiar
-            Toast toast=Toast.makeText(c,e.toString(), Toast.LENGTH_SHORT);
+            /*Toast toast=Toast.makeText(c,e.toString(), Toast.LENGTH_SHORT);
             toast.setGravity(Gravity.CENTER,0,0);
-            toast.show();
+            toast.show();*/
         } catch (IOException e) {
             //ToDo cambiar
             Toast toast=Toast.makeText(c,e.toString(), Toast.LENGTH_SHORT);
@@ -105,6 +112,75 @@ public class FicheroController {
             for(int i=0;i<jugadores.size();i++){
                 escribeBin.writeObject(jugadores.elementAt(i));
             }
+            escribeBin.close();
+            ficheroBin.close();
+        }catch(IOException e){
+            //ToDo Cambiar
+            Log.e("Error",e.toString());
+
+        }finally{
+            if(escribeBin!=null){
+                try {
+                    escribeBin.close();
+                } catch (IOException e) {
+                    //ToDo Cambiar
+                    Log.e("Error",e.toString());
+                }
+            }
+            if(ficheroBin!=null){
+                try {
+                    ficheroBin.close();
+                } catch (IOException e) {
+                    //ToDo Cambiar
+                    Log.e("Error",e.toString());
+                }
+            }
+        }
+    }
+
+    public int recuperaId(){
+        FileInputStream leer=null;
+        DataInputStream in=null;
+        int devolver=0;
+        try{
+            leer=new FileInputStream(ficheroId);
+            in=new DataInputStream(leer);
+            devolver=in.readInt();
+        }catch(EOFException e){
+            //ToDo cambiar
+            /*Toast toast=Toast.makeText(c,e.toString(), Toast.LENGTH_SHORT);
+            toast.setGravity(Gravity.CENTER,0,0);
+            toast.show();*/
+        } catch (IOException e) {
+            //ToDo cambiar
+            Toast toast=Toast.makeText(c,e.toString(), Toast.LENGTH_SHORT);
+            toast.setGravity(Gravity.CENTER,0,0);
+            toast.show();
+        }if(in!=null){
+            try {
+                in.close();
+            } catch (IOException e) {
+                System.out.println(e);
+            }
+        }
+        if(leer!=null){
+            try {
+                leer.close();
+            } catch (IOException e) {
+                System.out.println(e);
+            }
+        }
+        return devolver;
+    }
+
+    public void escribeId(int id){
+        FileOutputStream ficheroBin=null;
+        DataOutputStream escribeBin=null;
+        try{
+            ficheroBin=new FileOutputStream(ficheroId,false);
+            escribeBin=new DataOutputStream(ficheroBin);
+            //No usar write!!!
+            escribeBin.writeInt(id);
             escribeBin.close();
             ficheroBin.close();
         }catch(IOException e){

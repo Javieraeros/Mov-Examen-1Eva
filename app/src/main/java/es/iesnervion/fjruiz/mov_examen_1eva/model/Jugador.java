@@ -1,13 +1,13 @@
 package es.iesnervion.fjruiz.mov_examen_1eva.model;
 
 
-import android.graphics.Region;
 import android.os.Parcel;
 import android.os.Parcelable;
 
 import java.io.Serializable;
 
 import es.iesnervion.fjruiz.mov_examen_1eva.R;
+import es.iesnervion.fjruiz.mov_examen_1eva.controller.FicheroController;
 
 public class Jugador implements Serializable {
 
@@ -109,7 +109,12 @@ public class Jugador implements Serializable {
     }
 
     private int asignaId() {
+        FicheroController miId=new FicheroController("id.dat");
+        if(idStatico==0){
+            idStatico=miId.recuperaId();
+        }
         idStatico++;
+        miId.escribeId(idStatico);
         return idStatico;
     }
 

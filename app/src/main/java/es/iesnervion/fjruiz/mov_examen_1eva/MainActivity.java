@@ -127,6 +127,7 @@ public class MainActivity extends AppCompatActivity
 
             arrayjugadores.remove(posicionPulsada);
 
+            miFichero.escribeJugadores(arrayjugadores);
             //Llamo a onResume para que recargue el array de jugadores
             onResume();
         }else{
@@ -141,11 +142,11 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
-    @Override
+    /*@Override
     public void onDestroy(){
         super.onDestroy();
         miFichero.escribeJugadores(arrayjugadores);
-    }
+    }*/
 
     //region AutoGenerado por Android Studio
 
