@@ -12,6 +12,7 @@ import java.util.Vector;
 
 import es.iesnervion.fjruiz.mov_examen_1eva.MyApplication;
 import es.iesnervion.fjruiz.mov_examen_1eva.R;
+import es.iesnervion.fjruiz.mov_examen_1eva.controller.FicheroController;
 import es.iesnervion.fjruiz.mov_examen_1eva.controller.ImageAdapter;
 
 public class SeleccionaImagen extends AppCompatActivity implements GridView.OnItemClickListener {
@@ -26,6 +27,7 @@ public class SeleccionaImagen extends AppCompatActivity implements GridView.OnIt
     private Vector<Integer> imagenesEliminar = new Vector<>(25, 0);
 
     private Vector<Jugador> vectorJugadores=new Vector<>(10,0);
+    private FicheroController mifichero;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,6 +58,7 @@ public class SeleccionaImagen extends AppCompatActivity implements GridView.OnIt
      * ImageAdapter, pero para hacer esa clase más versatil, lo cambié al onCreate, y por último creé este método)
      */
     private void recuperaImagenes(){
+        mifichero=new FicheroController(this);
         //Recuperamos todas las imagenes
         for (int i = 0; i < 25; i++) {
             if (i < 10) {
@@ -65,7 +68,8 @@ public class SeleccionaImagen extends AppCompatActivity implements GridView.OnIt
             }
         }
         //Recuperamos las imagenes que no vamos a mostrar porque ya las tenemos cogidas
-        vectorJugadores=((MyApplication) getApplication()).getVectorJugadores();
+        //TODO Cambiar esto por fichero
+        vectorJugadores=mifichero.recuperaJugadores();
         for(int j=0;j<vectorJugadores.size();j++){
             imagenesEliminar.add(vectorJugadores.elementAt(j).getImagen());
         }
