@@ -11,7 +11,7 @@ import es.iesnervion.fjruiz.mov_examen_1eva.controller.FicheroController;
 
 public class Jugador implements Serializable {
 
-    //ToDo cambiar este método por uno que recupere el id de un archivo o BBDD
+    //ToDo intentar no usar un id estático
     private static int idStatico=0;
     private int id;
     private String nombre;

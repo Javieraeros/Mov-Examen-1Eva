@@ -20,6 +20,7 @@ import java.util.Vector;
 import es.iesnervion.fjruiz.mov_examen_1eva.model.Jugador;
 import es.iesnervion.fjruiz.mov_examen_1eva.model.MiOOS;
 
+//ToDo Documentar
 public class FicheroController {
     //region Atributos
 
@@ -44,6 +45,8 @@ public class FicheroController {
     }
 
     //endregion
+
+    //region Métodos
     /**
      * Método que devuelve todos los jugadores de un fichero
      * @return
@@ -206,4 +209,6 @@ public class FicheroController {
             }
         }
     }
+
+    //endregion
 }
