@@ -19,6 +19,7 @@ import es.iesnervion.fjruiz.mov_examen_1eva.controller.FicheroController;
 import es.iesnervion.fjruiz.mov_examen_1eva.controller.JugadorArrayAdapter;
 import es.iesnervion.fjruiz.mov_examen_1eva.model.Jugador;
 
+//ToDo Cuando pinche sobre un jugador muestre editar, cuando deje pulsado, menú contextual
 public class MainActivity extends AppCompatActivity
         implements View.OnClickListener, AdapterView.OnItemLongClickListener,
                     PopupMenu.OnMenuItemClickListener{

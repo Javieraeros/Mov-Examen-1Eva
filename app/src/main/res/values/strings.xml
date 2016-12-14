@@ -4,4 +4,8 @@
     <string name="title_activity_detalles_jugador">DetallesJugador</string>
     <string name="peso">Peso</string>
     <string name="altura">Altura</string>
+    <string name="errorInstalacion">Error de Instalación</string>
+    <string name="opciones">es.iesnervion.fjruiz.opciones.dat</string>
+    <string name="id">id</string>
+    <string name="cantidadJugadores">cantidadJugadores</string>
 </resources>

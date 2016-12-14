@@ -68,7 +68,6 @@ public class SeleccionaImagen extends AppCompatActivity implements GridView.OnIt
             }
         }
         //Recuperamos las imagenes que no vamos a mostrar porque ya las tenemos cogidas
-        //TODO Cambiar esto por fichero
         vectorJugadores=mifichero.recuperaJugadores();
         for(int j=0;j<vectorJugadores.size();j++){
             imagenesEliminar.add(vectorJugadores.elementAt(j).getImagen());

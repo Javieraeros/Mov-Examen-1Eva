@@ -11,8 +11,6 @@ import es.iesnervion.fjruiz.mov_examen_1eva.controller.FicheroController;
 
 public class Jugador implements Serializable {
 
-    //ToDo intentar no usar un id estático
-    private static int idStatico=0;
     private int id;
     private String nombre;
     private int imagen;
@@ -92,9 +90,7 @@ public class Jugador implements Serializable {
 
     @Override
     public String toString(){
-        //ToDo Modificar para que use cadenas de @string
-        String devolver="Altura: "+this.altura+" Peso: "+this.peso+" Posición: "+this.posicion;
-        return  devolver;
+        return  "Altura: "+this.altura+" Peso: "+this.peso+" Posición: "+this.posicion;
     }
 
     @Override
@@ -109,13 +105,11 @@ public class Jugador implements Serializable {
     }
 
     private int asignaId() {
-        FicheroController miId=new FicheroController("id.dat");
-        if(idStatico==0){
-            idStatico=miId.recuperaId();
-        }
-        idStatico++;
-        miId.escribeId(idStatico);
-        return idStatico;
+        FicheroController miId=new FicheroController();
+        int id=miId.recuperaId();
+        id++;
+        miId.escribeId(id);
+        return id;
     }
 
     /*@Override
