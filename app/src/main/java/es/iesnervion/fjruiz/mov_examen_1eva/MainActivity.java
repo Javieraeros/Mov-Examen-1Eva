@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.view.ActionMode;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -20,9 +21,12 @@ import es.iesnervion.fjruiz.mov_examen_1eva.controller.JugadorArrayAdapter;
 import es.iesnervion.fjruiz.mov_examen_1eva.model.Jugador;
 
 //ToDo Cuando pinche sobre un jugador muestre editar, cuando deje pulsado, menú contextual
+//https://developer.android.com/guide/topics/ui/menus.html?hl=es-419#CAB
 public class MainActivity extends AppCompatActivity
-        implements View.OnClickListener, AdapterView.OnItemLongClickListener,
-                    PopupMenu.OnMenuItemClickListener{
+        implements View.OnClickListener,
+                    AdapterView.OnItemClickListener,
+                    AdapterView.OnItemLongClickListener,
+                    ActionMode.Callback{
 
     private FicheroController miFichero;
     private Vector<Jugador> arrayjugadores;
@@ -47,18 +51,6 @@ public class MainActivity extends AppCompatActivity
         fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(this);
 
-        /*Jugador jugador=new Jugador("Pene",R.drawable.jugador00,"Alero",90,150);
-        Jugador jugador2=new Jugador("Jugador10",R.drawable.jugador00,"Alero",90,150);
-        ((MyApplication) getApplication()).setJugador(jugador);
-        ((MyApplication) getApplication()).setJugador(jugador);
-        ((MyApplication) getApplication()).setJugador(jugador);
-        ((MyApplication) getApplication()).setJugador(jugador);
-        ((MyApplication) getApplication()).setJugador(jugador);
-        ((MyApplication) getApplication()).setJugador(jugador);
-        ((MyApplication) getApplication()).setJugador(jugador);
-        ((MyApplication) getApplication()).setJugador(jugador);
-        ((MyApplication) getApplication()).setJugador(jugador);
-        ((MyApplication) getApplication()).setJugador(jugador2);*/
         miFichero=new FicheroController(this);
         arrayjugadores=miFichero.recuperaJugadores();
 
@@ -98,7 +90,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     /**
-     * Método qeu controla cuando pulsamos un jugador del list view
+     * Método qeu controla cuando dejamos pulsado un jugador del list view
      * @param parent
      * @param view
      * @param position
@@ -115,6 +107,25 @@ public class MainActivity extends AppCompatActivity
         popupMenu.setOnMenuItemClickListener(this);
         popupMenu.show();
         return true;
+    }
+
+    /**
+     * Método al que llamamaos cuando pulsamos un jugador de listview
+     * @param parent
+     * @param view
+     * @param position
+     * @param id
+     */
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        Intent editar=new Intent(this,DetallesJugador.class);
+        editar.putExtra("jugador",jugadorSeleccionado);
+        //Añado la posición que hemos pulsado aquí,porque al utilizar vector.indexOf() no me detecta
+        //bien la posición
+        //No funciona porque tiene que ser parcelable... :(
+        //editar.putExtra("posicion",posicionPulsada);
+        startActivity(editar);
     }
 
     /**
@@ -143,11 +154,29 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
-    /*@Override
-    public void onDestroy(){
-        super.onDestroy();
-        miFichero.escribeJugadores(arrayjugadores);
-    }*/
+    //ToDo documentar y acabar
+    @Override
+    public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+        return false;
+    }
+
+    @Override
+    public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+        return false;
+    }
+
+    @Override
+    public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+
+        return false;
+    }
+
+    @Override
+    public void onDestroyActionMode(ActionMode mode) {
+
+    }
+
+
 
     //region AutoGenerado por Android Studio
 
@@ -172,7 +201,5 @@ public class MainActivity extends AppCompatActivity
 
         return super.onOptionsItemSelected(item);
     }
-
-
     //endregion
 }
