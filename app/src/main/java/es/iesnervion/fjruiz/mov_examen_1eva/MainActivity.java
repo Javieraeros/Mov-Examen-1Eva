@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.ActionMode;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -20,18 +21,49 @@ import es.iesnervion.fjruiz.mov_examen_1eva.controller.FicheroController;
 import es.iesnervion.fjruiz.mov_examen_1eva.controller.JugadorArrayAdapter;
 import es.iesnervion.fjruiz.mov_examen_1eva.model.Jugador;
 
-//ToDo Cuando pinche sobre un jugador muestre editar, cuando deje pulsado, menú contextual
-//https://developer.android.com/guide/topics/ui/menus.html?hl=es-419#CAB
 public class MainActivity extends AppCompatActivity
         implements View.OnClickListener,
                     AdapterView.OnItemClickListener,
-                    AdapterView.OnItemLongClickListener,
-                    ActionMode.Callback{
+                    AdapterView.OnItemLongClickListener{
 
     private FicheroController miFichero;
     private Vector<Jugador> arrayjugadores;
     private FloatingActionButton fab;
     private ListView lv;
+    private ActionMode mActionMode;
+
+    //ToDO Preguntar a Miguel Angel como cambiar esto
+    private ActionMode.Callback mActionModeCallback=new ActionMode.Callback() {
+        @Override
+        public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+            MenuInflater inflater = mode.getMenuInflater();
+            inflater.inflate(R.menu.menu, menu);
+            return true;
+        }
+
+        @Override
+        public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+            return false;
+        }
+
+        @Override
+        public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+            //Puesto que solo tenemos un botón, no es necesario que distingamos
+            //por botón.
+            arrayjugadores.remove(posicionPulsada);
+            miFichero.escribeJugadores(arrayjugadores);
+            //Llamo a onResume para que recargue el array de jugadores
+            onResume();
+
+            mode.finish();
+            return true;
+        }
+
+        @Override
+        public void onDestroyActionMode(ActionMode mode) {
+            mActionMode=null;
+        }
+    };
 
     //Aquí guardamos el item que hemos pulsado para borrar/editar
     private int posicionPulsada;
@@ -53,6 +85,9 @@ public class MainActivity extends AppCompatActivity
 
         miFichero=new FicheroController(this);
         arrayjugadores=miFichero.recuperaJugadores();
+
+        lv.setOnItemClickListener(this);
+
 
     }
 
@@ -101,11 +136,13 @@ public class MainActivity extends AppCompatActivity
         //recuperamos la posición y el jugador pulsado
         posicionPulsada=position;
         jugadorSeleccionado=arrayjugadores.elementAt(position);
+        if (mActionMode != null) {
+            return false;
+        }
 
-        PopupMenu popupMenu = new PopupMenu(this, view);
-        popupMenu.getMenuInflater().inflate(R.menu.menu, popupMenu.getMenu());
-        popupMenu.setOnMenuItemClickListener(this);
-        popupMenu.show();
+        // Start the CAB using the ActionMode.Callback defined above
+        mActionMode = this.startSupportActionMode(mActionModeCallback);
+        view.setSelected(true);
         return true;
     }
 
@@ -127,56 +164,6 @@ public class MainActivity extends AppCompatActivity
         //editar.putExtra("posicion",posicionPulsada);
         startActivity(editar);
     }
-
-    /**
-     * Selección de una posibilidad del menú
-     * @param item
-     * @return
-     */
-    @Override
-    public boolean onMenuItemClick(MenuItem item) {
-        if(item.getItemId()==R.id.borrar){
-
-            arrayjugadores.remove(posicionPulsada);
-
-            miFichero.escribeJugadores(arrayjugadores);
-            //Llamo a onResume para que recargue el array de jugadores
-            onResume();
-        }else{
-            Intent editar=new Intent(this,DetallesJugador.class);
-            editar.putExtra("jugador",jugadorSeleccionado);
-            //Añado la posición que hemos pulsado aquí,porque al utilizar vector.indexOf() no me detecta
-            //bien la posición
-            //No funciona porque tiene que ser parcelable... :(
-            //editar.putExtra("posicion",posicionPulsada);
-            startActivity(editar);
-        }
-        return true;
-    }
-
-    //ToDo documentar y acabar
-    @Override
-    public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-        return false;
-    }
-
-    @Override
-    public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
-        return false;
-    }
-
-    @Override
-    public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-
-        return false;
-    }
-
-    @Override
-    public void onDestroyActionMode(ActionMode mode) {
-
-    }
-
-
 
     //region AutoGenerado por Android Studio
 
