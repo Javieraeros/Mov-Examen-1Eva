@@ -32,6 +32,12 @@ public class MainActivity extends AppCompatActivity
     private ListView lv;
     private ActionMode mActionMode;
 
+    //Aquí guardamos el item que hemos pulsado para borrar/editar
+    private int posicionPulsada;
+
+    //Aquí guardamos el jugador que vamos a editar
+    private Jugador jugadorSeleccionado;
+
     //ToDO Preguntar a Miguel Angel como cambiar esto
     private ActionMode.Callback mActionModeCallback=new ActionMode.Callback() {
         @Override
@@ -64,12 +70,6 @@ public class MainActivity extends AppCompatActivity
             mActionMode=null;
         }
     };
-
-    //Aquí guardamos el item que hemos pulsado para borrar/editar
-    private int posicionPulsada;
-
-    //Aquí guardamos el jugador que vamos a editar
-    private Jugador jugadorSeleccionado;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -131,6 +131,7 @@ public class MainActivity extends AppCompatActivity
      * @param position
      * @param id
      */
+    //ToDo cambiar oclor de seleccionado
     @Override
     public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
         //recuperamos la posición y el jugador pulsado
@@ -156,6 +157,9 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        //recuperamos la posición y el jugador pulsado
+        posicionPulsada=position;
+        jugadorSeleccionado=arrayjugadores.elementAt(position);
         Intent editar=new Intent(this,DetallesJugador.class);
         editar.putExtra("jugador",jugadorSeleccionado);
         //Añado la posición que hemos pulsado aquí,porque al utilizar vector.indexOf() no me detecta
