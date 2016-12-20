@@ -24,7 +24,8 @@ import es.iesnervion.fjruiz.mov_examen_1eva.model.Jugador;
 public class MainActivity extends AppCompatActivity
         implements View.OnClickListener,
                     AdapterView.OnItemClickListener,
-                    AdapterView.OnItemLongClickListener{
+                    AdapterView.OnItemLongClickListener,
+                    ActionMode.Callback{
 
     private FicheroController miFichero;
     private Vector<Jugador> arrayjugadores;
@@ -38,38 +39,8 @@ public class MainActivity extends AppCompatActivity
     //Aquí guardamos el jugador que vamos a editar
     private Jugador jugadorSeleccionado;
 
-    //ToDO Preguntar a Miguel Angel como cambiar esto
-    private ActionMode.Callback mActionModeCallback=new ActionMode.Callback() {
-        @Override
-        public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-            MenuInflater inflater = mode.getMenuInflater();
-            inflater.inflate(R.menu.menu, menu);
-            return true;
-        }
 
-        @Override
-        public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
-            return false;
-        }
-
-        @Override
-        public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-            //Puesto que solo tenemos un botón, no es necesario que distingamos
-            //por botón.
-            arrayjugadores.remove(posicionPulsada);
-            miFichero.escribeJugadores(arrayjugadores);
-            //Llamo a onResume para que recargue el array de jugadores
-            onResume();
-
-            mode.finish();
-            return true;
-        }
-
-        @Override
-        public void onDestroyActionMode(ActionMode mode) {
-            mActionMode=null;
-        }
-    };
+    private ActionMode.Callback mActionModeCallback=this;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -169,28 +140,33 @@ public class MainActivity extends AppCompatActivity
         startActivity(editar);
     }
 
-    //region AutoGenerado por Android Studio
-
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
+    public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+        MenuInflater inflater = mode.getMenuInflater();
+        inflater.inflate(R.menu.menu, menu);
         return true;
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
+    public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+        return false;
     }
-    //endregion
+
+    @Override
+    public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+        //Puesto que solo tenemos un botón, no es necesario que distingamos
+        //por botón.
+        arrayjugadores.remove(posicionPulsada);
+        miFichero.escribeJugadores(arrayjugadores);
+        //Llamo a onResume para que recargue el array de jugadores
+        onResume();
+
+        mode.finish();
+        return true;
+    }
+
+    @Override
+    public void onDestroyActionMode(ActionMode mode) {
+        mActionMode=null;
+    }
 }
